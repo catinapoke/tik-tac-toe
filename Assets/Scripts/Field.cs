@@ -29,6 +29,7 @@ public class Field : MonoBehaviour
     public void Tap(int row, int column, ItemType itemType)
     {
         Assert.IsTrue(row is >-1 and <3 && column is >-1 and <3);
+        Debug.Log($"Got tap at {row}x{column} {itemType}");
 
         FieldSlot slot = points[row * 3 + column];
         slot.TrySet(signs[itemType == ItemType.Circle ? 0 : 1]);

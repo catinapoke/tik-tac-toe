@@ -1,17 +1,35 @@
-﻿using System;
-using Unity.Netcode;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace GameNetwork
 {
     public class PlayerEntity : NetworkBehaviour
     {
-        public NetworkVariable<ItemType> Type;
-        public NetworkVariable<int> BoosterCount;
+        private MatchSettings _settings;
+        
+        public NetworkVariable<ItemType> Type = new NetworkVariable<ItemType>(ItemType.Circle, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> BoosterCount = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        public override void OnNetworkSpawn()
+        public MatchSettings Settings => _settings;
+
+        public void UpdateSettings(MatchSettings settings)
         {
-            base.OnNetworkSpawn();
-            // Request player state
+            _settings = settings;
+            BoosterCount.Value = settings.IsBoosterAvailable ? 1 : 0;
+
+            var type = settings.GetPlayerType(OwnerClientId);
+            if (type == null)
+            {
+                Debug.LogError("Can't get type of player!");
+                Type.Value = ItemType.Circle;
+            }
+            else
+            {
+                Type.Value = type.Value;
+            }
+            
+            Debug.Log($"UpdateSettings({OwnerClientId}), Type: {Type.Value}, Boosters: {BoosterCount.Value}");
+            gameObject.name = $"Player_{Type.Value}";
         }
     }
 }

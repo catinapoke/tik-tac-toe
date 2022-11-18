@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -27,6 +26,8 @@ namespace GameNetwork
             set => _settings.FinishAction = value;
         }
 
+        public MatchSettings Settings => _settings;
+
         public event Action<SettingsUpdate> OnUpdate;
         
         public override void OnNetworkSpawn()
@@ -39,7 +40,7 @@ namespace GameNetwork
                 return;
             }
 
-            _settings = new MatchSettings();
+            _settings = MatchSettings.Create();
             ItemType type = UnityEngine.Random.Range(0, 2) == 0 ? ItemType.Circle : ItemType.Cross;
             _settings.PlayerTypes[type] = NetworkManager.LocalClient.ClientId;
 
@@ -68,6 +69,8 @@ namespace GameNetwork
                     TargetClientIds = new ulong[]{sendParams.Receive.SenderClientId}
                 }
             };
+
+            AddPlayer(sendParams.Receive.SenderClientId);
             
             RequestSettingsClientRpc(_settings, clientRpcParams);
         }
@@ -75,7 +78,6 @@ namespace GameNetwork
         [ClientRpc]
         private void RequestSettingsClientRpc(MatchSettings settings, ClientRpcParams sendParams = default)
         {
-            // TODO: Pass clients with new client (AddPlayer is called later then request)
             _settings = settings;
             Debug.Log($"Received settings: {settings.DebugString()}");
         }
@@ -102,19 +104,25 @@ namespace GameNetwork
             
             OnUpdate?.Invoke(update);
         }
-        
+
         private void AddPlayer(ulong playerId)
         {
-            if (_settings.PlayerTypes.ContainsKey(ItemType.Circle))
-                _settings.PlayerTypes[ItemType.Cross] = playerId;
-            else
-                _settings.PlayerTypes[ItemType.Circle] = playerId;
+            if (_settings.PlayerTypes.ContainsValue(playerId)) return;
+            
+            ItemType type = (_settings.GetPlayerOpponentType(playerId) == ItemType.Circle ? ItemType.Cross : ItemType.Circle);
+            _settings.PlayerTypes[type] = playerId;
         }
 
         private void RemovePlayer(ulong playerId)
         {
-            ItemType type = _settings.PlayerTypes.First(x => x.Value == playerId).Key;
-            _settings.PlayerTypes.Remove(type);
+            ItemType? type = _settings.GetPlayerType(playerId);
+            
+            if(type != null)
+                _settings.PlayerTypes.Remove(type.Value);
+            else
+            {
+                Debug.LogError($"There is no type of player {playerId}");
+            }
         }
     }
 }

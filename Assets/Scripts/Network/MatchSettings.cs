@@ -4,13 +4,49 @@ using Unity.Netcode;
 
 namespace GameNetwork
 {
-    public class MatchSettings  : INetworkSerializable
+    public struct MatchSettings  : INetworkSerializable
     {
-        public Dictionary<ItemType, ulong> PlayerTypes = new Dictionary<ItemType, ulong>(2);
-        public int TimerLength = -1;
-        public bool IsBoosterAvailable = false;
-        public TimerFinishAction FinishAction = TimerFinishAction.RandomChoice;
+        public Dictionary<ItemType, ulong> PlayerTypes;
+        public int TimerLength;
+        public bool IsBoosterAvailable;
+        public TimerFinishAction FinishAction;
+
+        public static MatchSettings Create(
+            int timerLength = -1, 
+            bool isBoosterAvailable = false, 
+            TimerFinishAction action = TimerFinishAction.RandomChoice)
+        {
+            return new MatchSettings()
+            {
+                PlayerTypes = new Dictionary<ItemType, ulong>(2),
+                TimerLength = timerLength,
+                IsBoosterAvailable = isBoosterAvailable,
+                FinishAction = action
+            };
+        }
+
+        public ItemType? GetPlayerType(ulong playerId)
+        {
+            foreach (var pair in PlayerTypes)
+            {
+                if (pair.Value == playerId)
+                    return pair.Key;
+            }
+            
+            return null;
+        }
         
+        public ItemType? GetPlayerOpponentType(ulong playerId)
+        {
+            foreach (var pair in PlayerTypes)
+            {
+                if (pair.Value != playerId)
+                    return pair.Key;
+            }
+            
+            return null;
+        }
+
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             int count = 0;

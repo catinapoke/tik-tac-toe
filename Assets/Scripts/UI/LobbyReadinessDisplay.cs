@@ -1,6 +1,6 @@
-using System;
 using GameNetwork;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,6 +46,8 @@ namespace GameUI
 
         public void ChangeReadiness()
         {
+            if(NetworkManager.Singleton.IsServer && NetworkManager.Singleton.ConnectedClientsIds.Count < 2) return;
+            
             bool currentState = _lobby.LocalPlayerReadiness;
             _lobby.RequestSwitchReadyStatus(!currentState);
             UpdateState(!currentState, IsOtherPlayerReady);

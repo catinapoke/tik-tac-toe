@@ -9,6 +9,7 @@ namespace GameNetwork
     public class MatchStarter : NetworkBehaviour
     {
         [SerializeField] private Lobby _lobby;
+        [SerializeField] private NetworkMatchSettings _matchSettings;
         
         private double _startTime = -1;
         
@@ -36,7 +37,7 @@ namespace GameNetwork
             if (!isEveryoneReady)
             {
                 _startTime = -1;
-                SyncStartTimeClientRpc(-1);
+                SyncStartClientRpc(-1);
                 return;
             }
             
@@ -57,15 +58,16 @@ namespace GameNetwork
         private void StartDelayedStart(double delay=5f)
         {
             _startTime = NetworkManager.Singleton.ServerTime.Time + delay;
-            SyncStartTimeClientRpc(_startTime);
+            SyncStartClientRpc(_startTime);
             StartCoroutine(WaitAndStart());
         }
 
         [ClientRpc]
-        private void SyncStartTimeClientRpc(double startTime)
+        private void SyncStartClientRpc(double startTime)
         {
             _startTime = startTime;
             OnStartTimeChange?.Invoke();
+            SaveSettings();
         }
 
         private IEnumerator WaitAndStart()
@@ -77,11 +79,25 @@ namespace GameNetwork
                 
                 yield return null;
             }
-            
+
             if (_startTime < 0) 
                 yield break;
 
             NetworkManager.SceneManager.LoadScene("Match", LoadSceneMode.Single);
+        }
+
+        private void SaveSettings()
+        {
+            PlayerEntity playerEntity = NetworkManager.Singleton.
+                LocalClient.PlayerObject.GetComponent<PlayerEntity>();
+
+            if (playerEntity == null)
+            {
+                Debug.LogError("Can't save settings!");
+                return;
+            }
+
+            playerEntity.UpdateSettings(_matchSettings.Settings);
         }
     }
 }
