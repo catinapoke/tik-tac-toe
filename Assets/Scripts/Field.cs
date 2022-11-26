@@ -8,7 +8,7 @@ public class Field : MonoBehaviour
     [SerializeField] private FieldSlot[] points;
     [SerializeField] private FieldItem[] signs;
 
-    public Action<ItemType> OnVictory;
+    public Action<ItemType?> OnGameFinish;
 
     private void OnValidate()
     {
@@ -21,9 +21,6 @@ public class Field : MonoBehaviour
         int row, column;
         (row, column) = GetSlotPosition(slot);
         Tap(row, column, itemType);
-        
-        slot.TrySet(signs[itemType == ItemType.Circle ? 0 : 1]);
-        CheckWinStateGreedy(row, column);
     }
     
     public void Tap(int row, int column, ItemType itemType)
@@ -33,7 +30,9 @@ public class Field : MonoBehaviour
 
         FieldSlot slot = points[row * 3 + column];
         slot.TrySet(signs[itemType == ItemType.Circle ? 0 : 1]);
-        CheckWinStateGreedy(row, column);
+        
+        if(CheckWinStateGreedy(row, column) == null)
+            CheckFullField();
     }
 
     // Returns (row, column) of slot
@@ -55,42 +54,44 @@ public class Field : MonoBehaviour
         return (slotNumber / 3, slotNumber % 3);
     }
 
-    private void CheckWinStateGreedy(int row, int column)
+    private ItemType? CheckWinStateGreedy(int row, int column)
     {
         if (row is < -1 or > 2 || column is < -1 or > 2)
-            return;
+            return null;
 
         FieldItem[] items = new FieldItem[3];
         if (CheckSet(FillArray(items, Row(row)), out ItemType type))
         {
             Debug.Log($"Won in row#{row}: {type.ToString()}");
-            OnVictory?.Invoke(type);
-            return;
+            OnGameFinish?.Invoke(type);
+            return type;
         }
 
         if (CheckSet(FillArray(items, Column(column)), out type))
         {
             Debug.Log($"Won in column#{column}: {type.ToString()}");
-            OnVictory?.Invoke(type);
-            return;
+            OnGameFinish?.Invoke(type);
+            return type;
         }
 
         if (row == column && CheckSet(FillArray(items, Cross(true)), out type))
         {
             Debug.Log($"Won in diagonal#0: {type.ToString()}");
-            OnVictory?.Invoke(type);
-            return;
+            OnGameFinish?.Invoke(type);
+            return type;
         }
 
         if (row + column == 2 && CheckSet(FillArray(items, Cross(false)), out type))
         {
             Debug.Log($"Won in diagonal#1: {type.ToString()}");
-            OnVictory?.Invoke(type);
-            return;
+            OnGameFinish?.Invoke(type);
+            return type;
         }
+
+        return null;
     }
 
-    private void CheckWinState()
+    private ItemType? CheckWinState()
     {
         FieldItem[] items = new FieldItem[3];
         for (int i = 0; i < 3; i++)
@@ -99,7 +100,7 @@ public class Field : MonoBehaviour
             if (CheckSet(items, out ItemType type))
             {
                 Debug.Log($"Won in row#{i}: {type.ToString()}");
-                return;
+                return type;
             }
         }
 
@@ -109,7 +110,7 @@ public class Field : MonoBehaviour
             if (CheckSet(items, out ItemType type))
             {
                 Debug.Log($"Won in column#{i}: {type.ToString()}");
-                return;
+                return type;
             }
         }
 
@@ -119,9 +120,21 @@ public class Field : MonoBehaviour
             if (CheckSet(items, out ItemType type))
             {
                 Debug.Log($"Won in diagonal#{i}: {type.ToString()}");
-                return;
+                return type;
             }
         }
+
+        return null;
+    }
+
+    private void CheckFullField()
+    {
+        foreach (var slot in points)
+        {
+            if(slot.IsAvailable) return;
+        }
+        
+        OnGameFinish?.Invoke(null);
     }
 
     private bool CheckSet(FieldItem[] set, out ItemType winType)
