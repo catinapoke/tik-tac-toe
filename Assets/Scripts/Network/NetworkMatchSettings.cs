@@ -43,6 +43,7 @@ namespace GameNetwork
             _settings = MatchSettings.Create();
             ItemType type = UnityEngine.Random.Range(0, 2) == 0 ? ItemType.Circle : ItemType.Cross;
             _settings.PlayerTypes[type] = NetworkManager.LocalClient.ClientId;
+            Console.WriteLine($"Created settings: {_settings.DebugString()}");
 
             NetworkManager.Singleton.OnClientConnectedCallback += AddPlayer;
             NetworkManager.Singleton.OnClientDisconnectCallback += RemovePlayer;

@@ -192,7 +192,7 @@ public class Field : MonoBehaviour
         for (int j = 0; j < 3; j++)
         {
             int k = first ? j : 2 - j;
-            yield return points[k * 3 + k].Item;
+            yield return points[j * 3 + k].Item;
         }
     }
 }

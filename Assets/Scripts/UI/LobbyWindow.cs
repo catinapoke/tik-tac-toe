@@ -34,7 +34,7 @@ public class LobbyWindow : MonoBehaviour
     private void UpdateView()
     {
         _timer.TryForceToggle(_settings.TimerLength);
-        _booster.TryForceToggle(_settings.IsBoosterAvailable?1:0);
+        _booster.TryForceToggle(_settings.IsBoosterAvailable?1:-1);
         _timerAction.TryForceToggle((int) _settings.TimerAction);
     }
     
@@ -52,7 +52,7 @@ public class LobbyWindow : MonoBehaviour
                 _timer.TryForceToggle(_settings.TimerLength);
                 break;
             case SettingsUpdate.UpdateType.Booster:
-                _booster.TryForceToggle(_settings.IsBoosterAvailable?1:0);
+                _booster.TryForceToggle(_settings.IsBoosterAvailable?1:-1);
                 break;
             case SettingsUpdate.UpdateType.FinishAction:
                 _timerAction.TryForceToggle((int) _settings.TimerAction);
@@ -87,7 +87,7 @@ public class LobbyWindow : MonoBehaviour
     {
         if (!NetworkManager.Singleton.IsServer)
         {
-            _booster.TryForceToggle(_settings.IsBoosterAvailable ? 1 : 0);
+            _booster.TryForceToggle(_settings.IsBoosterAvailable ? 1 : -1);
             _timerAction.gameObject.SetActive(_settings.IsBoosterAvailable && !_timer.IsValueActive(0));
             return;
         }
@@ -105,7 +105,7 @@ public class LobbyWindow : MonoBehaviour
     {
         if (!NetworkManager.Singleton.IsServer)
         {
-            _timerAction.TryForceToggle(_settings.TimerLength);
+            _timerAction.TryForceToggle((int)_settings.TimerAction);
             return;
         }
         
