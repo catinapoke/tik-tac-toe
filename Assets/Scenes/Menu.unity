@@ -418,83 +418,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3084571697105546123, guid: 7bd001d2772368649872516a360b69b6, type: 3}
   m_PrefabInstance: {fileID: 804057389}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1304552099
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 524424205278024112, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: NetworkConfig.ConnectionApproval
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 524424205278024112, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: NetworkConfig.NetworkPrefabs.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 524424205278024112, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: NetworkConfig.ClientConnectionBufferTimeout
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 524424205278024112, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: NetworkConfig.NetworkPrefabs.Array.data[1].Prefab
-      value: 
-      objectReference: {fileID: 4231967554113943846, guid: b7383dabae6bba5498ac6ae2a6e7668d, type: 3}
-    - target: {fileID: 524424205278024112, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: NetworkConfig.NetworkPrefabs.Array.data[2].Prefab
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2101762727337469396, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_Name
-      value: Network
-      objectReference: {fileID: 0}
-    - target: {fileID: 4406489608500008141, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4406489608500008141, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4406489608500008141, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4406489608500008141, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4406489608500008141, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4406489608500008141, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4406489608500008141, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4406489608500008141, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4406489608500008141, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4406489608500008141, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4406489608500008141, guid: 139cde8e1193768449a916a67525a61d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 139cde8e1193768449a916a67525a61d, type: 3}
 --- !u!1 &1461985726
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,7 +659,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22457152, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 22457152, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchorMax.x

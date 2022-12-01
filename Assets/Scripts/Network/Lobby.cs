@@ -48,6 +48,11 @@ namespace GameNetwork
             DebugLobby(default);
         }
 
+        private void OnDisable()
+        {
+            OnNetworkDespawn();
+        }
+
         public override void OnNetworkDespawn()
         {
             if (IsServer)
@@ -82,13 +87,13 @@ namespace GameNetwork
         
         private void OnPlayerAdd(ulong clientId)
         {
-            if(!_playersReadiness.ContainsKey(clientId))
+            if(_playersReadiness != null && !_playersReadiness.ContainsKey(clientId))
                 _playersReadiness.Add(clientId, false);
         }
 
         private void OnPlayerRemove(ulong clientId)
         {
-            if(_playersReadiness.ContainsKey(clientId))
+            if(_playersReadiness != null && _playersReadiness.ContainsKey(clientId))
                 _playersReadiness.Remove(clientId);
         }
 
